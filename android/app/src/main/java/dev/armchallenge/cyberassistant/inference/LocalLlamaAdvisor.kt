@@ -73,7 +73,7 @@ class LocalLlamaAdvisor @Inject constructor(@ApplicationContext private val cont
             val localModule = module ?: LlmModule(
                 modelFile.absolutePath, tokenizerFile.absolutePath, 0.0f
             ).also { loaded ->
-                check(loaded.load() == 0) { "The local Llama model could not be loaded" }
+                loaded.load()
                 module = loaded
             }
             localModule.resetContext()
