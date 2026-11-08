@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,7 +45,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.armchallenge.cyberassistant.core.ScanState
+import dev.armchallenge.cyberassistant.ui.AdvisorState
+import dev.armchallenge.cyberassistant.ui.AdvisorViewModel
 import dev.armchallenge.cyberassistant.ui.HistoryViewModel
+import dev.armchallenge.cyberassistant.ui.ModelViewModel
 import dev.armchallenge.cyberassistant.ui.ScanViewModel
 
 @AndroidEntryPoint
@@ -94,14 +99,61 @@ private fun AppNavigation(sharedText: String?) {
         composable("network") { Page("Network monitor", "VPN flow extraction and the DDoS model are not validated. Monitoring is off; no network traffic is captured.", nav) }
         composable("malware") { Page("Malware scanner", "A Windows PE classifier has been exported, but Android PE feature extraction is not validated. The CNN expects specially prepared images. Device malware scanning is unavailable.", nav) }
         composable("details") { Page("Threat details", "Open a completed scan to see its evidence and safe actions. No scan is selected.", nav) }
-        composable("advisor") { Page("AI security advisor", "The required local Llama model has not been provisioned or validated. Rule-based guidance remains available in scan results.", nav) }
+        composable("advisor") { AdvisorScreen(nav) }
         composable("history") { HistoryScreen(nav) }
         composable("settings") { Page("Settings", "Local history can be deleted from the History screen. No telemetry or cloud inference is enabled.", nav) {
             LinkButton("Model management", nav, "models")
             LinkButton("Permissions", nav, "permissions")
         } }
-        composable("models") { Page("Offline AI status", "Phishing LR: bundled ONNX candidate. Llama, SMS, DDoS, and malware models: unavailable or not validated for Android.", nav) }
+        composable("models") { ModelScreen(nav) }
         composable("permissions") { Page("Permissions", "Manual URL scanning needs no special permission. SMS inbox access and VPN monitoring are not enabled.", nav) }
+    }
+}
+
+@Composable
+private fun AdvisorScreen(nav: NavHostController) {
+    val vm: AdvisorViewModel = hiltViewModel()
+    val state by vm.state.collectAsState()
+    Page("AI security advisor", "Explain the latest supported scan using a verified local Llama model. Generated text may be mistaken; the listed actions come from fixed safety rules.", nav) {
+        Button(onClick = vm::explainLatest, enabled = state !is AdvisorState.Loading) {
+            Text("Explain latest URL scan")
+        }
+        when (val result = state) {
+            AdvisorState.Idle -> Text("Provision a local model under Offline AI status to enable explanations.")
+            AdvisorState.Loading -> CircularProgressIndicator()
+            is AdvisorState.Error -> Text(result.message, color = MaterialTheme.colorScheme.error)
+            is AdvisorState.Complete -> {
+                Text(result.explanation)
+                Text("Safe actions", fontWeight = FontWeight.Bold)
+                result.safeActions.forEach { Text("• $it") }
+            }
+        }
+        LinkButton("Offline AI status", nav, "models")
+    }
+}
+
+@Composable
+private fun ModelScreen(nav: NavHostController) {
+    val vm: ModelViewModel = hiltViewModel()
+    val status by vm.status.collectAsState()
+    val busy by vm.busy.collectAsState()
+    val modelPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) vm.importFile(uri, tokenizer = false)
+    }
+    val tokenizerPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) vm.importFile(uri, tokenizer = true)
+    }
+    Page("Offline AI status", "Phishing LR is bundled. Llama requires the pinned ExecuTorch Community Llama 3.2 1B Instruct model and tokenizer, copied from local files. The app never downloads models.", nav) {
+        Text(status)
+        if (busy) CircularProgressIndicator()
+        Button(onClick = { modelPicker.launch(arrayOf("application/octet-stream", "*/*")) }, enabled = !busy) {
+            Text("Import Llama .pte")
+        }
+        Button(onClick = { tokenizerPicker.launch(arrayOf("application/octet-stream", "*/*")) }, enabled = !busy) {
+            Text("Import tokenizer.model")
+        }
+        Text("The model is about 2.47 GB and needs additional free storage. The app checks exact file sizes and SHA-256 hashes before use. Device inference has not yet been validated.")
+        Text("SMS, DDoS, and malware detectors are still gated by Android input and parity checks.")
     }
 }
 

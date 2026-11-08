@@ -26,6 +26,8 @@ interface ScanEventDao {
     @Insert suspend fun insert(event: ScanEvent)
     @Query("SELECT * FROM scan_events ORDER BY timestamp DESC LIMIT 100")
     fun observeRecent(): Flow<List<ScanEvent>>
+    @Query("SELECT * FROM scan_events ORDER BY timestamp DESC LIMIT 1")
+    suspend fun latest(): ScanEvent?
     @Query("DELETE FROM scan_events WHERE id = :id")
     suspend fun delete(id: Long)
     @Query("DELETE FROM scan_events")

@@ -1,6 +1,7 @@
 package dev.armchallenge.cyberassistant.inference
 
 import android.content.Context
+import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.armchallenge.cyberassistant.core.ThreatFinding
 import java.io.File
@@ -25,6 +26,45 @@ class LocalLlamaAdvisor @Inject constructor(@ApplicationContext private val cont
     suspend fun isProvisioned(): Boolean = withContext(Dispatchers.IO) {
         modelFile.length() == MODEL_BYTES && tokenizerFile.length() == TOKENIZER_BYTES &&
             sha256(modelFile) == MODEL_SHA256 && sha256(tokenizerFile) == TOKENIZER_SHA256
+    }
+
+    /** Import only the pinned public model pack through Android's document picker. */
+    suspend fun importFile(uri: Uri, tokenizer: Boolean) = withContext(Dispatchers.IO) {
+        val expectedBytes = if (tokenizer) TOKENIZER_BYTES else MODEL_BYTES
+        val expectedHash = if (tokenizer) TOKENIZER_SHA256 else MODEL_SHA256
+        val destination = if (tokenizer) tokenizerFile else modelFile
+        modelDir.mkdirs()
+        require(modelDir.usableSpace > expectedBytes + 256L * 1024 * 1024) {
+            "At least ${expectedBytes / (1024 * 1024)} MB of free app storage is required"
+        }
+        val temporary = File(modelDir, destination.name + ".part")
+        try {
+            val digest = MessageDigest.getInstance("SHA-256")
+            var copied = 0L
+            val source = context.contentResolver.openInputStream(uri)
+                ?: error("The selected document could not be opened")
+            source.buffered().use { input ->
+                temporary.outputStream().buffered().use { output ->
+                    val buffer = ByteArray(1024 * 1024)
+                    while (true) {
+                        val count = input.read(buffer)
+                        if (count < 0) break
+                        copied += count
+                        require(copied <= expectedBytes) { "Selected file is too large" }
+                        digest.update(buffer, 0, count)
+                        output.write(buffer, 0, count)
+                    }
+                }
+            }
+            val hash = digest.digest().joinToString("") { "%02x".format(it) }
+            require(copied == expectedBytes && hash == expectedHash) {
+                "Selected file does not match the approved Llama model pack"
+            }
+            check(temporary.renameTo(destination)) { "Could not finish local model import" }
+            module = null
+        } finally {
+            temporary.delete()
+        }
     }
 
     suspend fun explain(finding: ThreatFinding): String = mutex.withLock {

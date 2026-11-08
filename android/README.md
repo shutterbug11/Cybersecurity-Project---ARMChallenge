@@ -20,3 +20,7 @@ Open this `android/` directory in Android Studio with JDK 17 or 21 and Android S
 - The existing grayscale CNN checkpoint exported to a 554,632-byte ExecuTorch XNNPACK `.pte`. Runtime validation on Windows is pending after a PyTorch/ExecuTorch environment error; Android image preprocessing and on-device parity are untested. It remains disabled.
 
 No production release APK is claimed.
+
+## Optional Llama model provisioning
+
+The local advisor bridge uses ExecuTorch 1.5.1 and is gated until a matching model pack is imported and device validated. The pinned public source is [ExecuTorch Community Llama 3.2 1B Instruct ET](https://huggingface.co/executorch-community/Llama-3.2-1B-Instruct-ET/tree/a890af65db35c8a68836d9cb1921b4b7223420a4), under the Llama 3.2 license. Acquire `Llama-3.2-1B-Instruct.pte` and `tokenizer.model` from that revision on a development machine. In the app, open **Offline AI status** and select both local files. The app copies them into private storage and checks their published size and SHA-256 values; it has no network permission. The `.pte` alone is 2,471,922,052 bytes, so provision on a device with ample free storage. Android generation, memory use, latency, and response quality are not yet verified. The model is not included in Git or the APK.
