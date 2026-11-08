@@ -1,0 +1,52 @@
+[
+  {
+    "raw": "Hello, the meeting starts at 10 tomorrow.",
+    "normalized": "hello meet start 10 tomorrow",
+    "feature_sha256": "f87e9dcfff5a26753e91561b333393ba8cd43408faf099b4afaad00acd37e8c0",
+    "prediction": 0,
+    "probabilities_ham_spam": [
+      0.9678328278038872,
+      0.03216717219611304
+    ]
+  },
+  {
+    "raw": "Claim your free prize now at https://example.invalid/win",
+    "normalized": "claim free prize http",
+    "feature_sha256": "25b961f3c5688253237594e6d7bb100f3e4251941f57515193e7ee0017c97ca3",
+    "prediction": 1,
+    "probabilities_ham_spam": [
+      0.15353175576574285,
+      0.846468244234257
+    ]
+  },
+  {
+    "raw": "Your parcel is ready. Please check the official app.",
+    "normalized": "parcel readi pleas check offici app",
+    "feature_sha256": "7f97b42936aa7da7cb179fe0b2abf673cda71fdc878b09c2707bafb7b4f8baa3",
+    "prediction": 0,
+    "probabilities_ham_spam": [
+      0.8482471233450409,
+      0.1517528766549586
+    ]
+  },
+  {
+    "raw": "URGENT: verify your account at http://example.invalid/login",
+    "normalized": "urgent verifi account http",
+    "feature_sha256": "5141d13dc9e6ca484eb7c6666a3f0594a6ae3577d70f9e9b7234118da75d67c5",
+    "prediction": 1,
+    "probabilities_ham_spam": [
+      0.3315742659577647,
+      0.6684257340422359
+    ]
+  },
+  {
+    "raw": "See you soon!",
+    "normalized": "see soon",
+    "feature_sha256": "4772e9ea0d37806e80b40810ae5aa6e394fe1e721fa559afd2284ca633216639",
+    "prediction": 0,
+    "probabilities_ham_spam": [
+      0.9419295240757489,
+      0.05807047592425069
+    ]
+  }
+]

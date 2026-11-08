@@ -1,0 +1,82 @@
+[
+  {
+    "raw": "https://example.com/",
+    "normalized": "https exampl com",
+    "features": {
+      "75447": 1,
+      "121380": 1,
+      "171850": 1
+    },
+    "probabilities_bad_good": [
+      0.9996466906813466,
+      0.0003533093186534473
+    ],
+    "label": "bad"
+  },
+  {
+    "raw": "http://secure-login-bank.example/verify-account",
+    "normalized": "http secur login bank exampl verifi account",
+    "features": {
+      "3104": 1,
+      "29692": 1,
+      "121380": 1,
+      "171826": 1,
+      "225406": 1,
+      "338737": 1,
+      "399287": 1
+    },
+    "probabilities_bad_good": [
+      0.9999999997805272,
+      2.1947281509107256e-10
+    ],
+    "label": "bad"
+  },
+  {
+    "raw": "HTTPS://pay.example/Account-Reset?id=3",
+    "normalized": "https pay exampl account reset id",
+    "features": {
+      "3104": 1,
+      "121380": 1,
+      "171850": 1,
+      "175681": 1,
+      "289023": 1,
+      "321042": 1
+    },
+    "probabilities_bad_good": [
+      0.9999993939400241,
+      6.060599758693521e-07
+    ],
+    "label": "bad"
+  },
+  {
+    "raw": "not a url but readable text",
+    "normalized": "not a url but readabl text",
+    "features": {
+      "54426": 1,
+      "269406": 1,
+      "317858": 1,
+      "369491": 1,
+      "393353": 1
+    },
+    "probabilities_bad_good": [
+      0.739154770153964,
+      0.260845229846036
+    ],
+    "label": "bad"
+  },
+  {
+    "raw": "https://xn--bcher-kva.example/a%20b",
+    "normalized": "https xn bcher kva exampl a b",
+    "features": {
+      "121380": 1,
+      "171850": 1,
+      "212580": 1,
+      "428985": 1
+    },
+    "probabilities_bad_good": [
+      0.9999863244385905,
+      1.3675561409570222e-05
+    ],
+    "label": "bad"
+  }
+]

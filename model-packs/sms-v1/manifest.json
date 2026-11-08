@@ -1,0 +1,27 @@
+{
+  "id": "sms-voting",
+  "version": 1,
+  "classes": [
+    "ham",
+    "spam"
+  ],
+  "input_shape": [
+    1,
+    3001
+  ],
+  "input_dtype": "float32",
+  "recovery": "Fitted missing MinMaxScaler on the same 7230 rows and saved TF-IDF vectorizer; notebook test metrics reproduced exactly",
+  "android_parity": "pending",
+  "classifier_conversion": "Three fitted estimators exported separately; equal-weight soft vote matches saved sklearn classifier on 1446 held-out rows in Python ONNX Runtime",
+  "onnx_artifacts": {
+    "random_forest.onnx": "73970bb5ce30046709afa2b0e24a76dd458618413fd6c5fdf28cf0b5e209e482",
+    "multinomial_nb.onnx": "6f0d636b136d92d93b7d2fc2440a827743e1f3b58f7603412ad50dbf520dc53a",
+    "extra_trees.onnx": "82793ad7378ae247929dfbc37a0e87db1e1e61d40e9d670c29c40b48401133d4"
+  },
+  "source_hashes": {
+    "sms_data\\spam_ham_india.csv": "e6a28126d1c4ec9d805a10cd89f2de2bb63650532102e9f35ab05c909c3a79f3",
+    "sms_data\\spam_utf8.csv": "3240c31697c991f396e1c2c40029f3648787fec891e8a88e5b549c101e0176c8",
+    "code\\vectorizer.pkl": "f54a4f284509ab4b7e09fbb9dc9f4257ff3ed8008146accb164ec7ef445ea429",
+    "code\\model.pkl": "49c3c257ddc6eaec30a661e0505b20efc44f0d1c9052c2a8297052ae7f73fa60"
+  }
+}

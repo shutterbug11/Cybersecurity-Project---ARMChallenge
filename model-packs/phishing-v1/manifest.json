@@ -1,0 +1,25 @@
+{
+  "id": "phishing-lr",
+  "version": 1,
+  "classes": [
+    "bad",
+    "good"
+  ],
+  "feature_count": 448098,
+  "input_dtype": "float32",
+  "input_shape": [
+    1,
+    448098
+  ],
+  "preprocessing": "NLTK [A-Za-z]+ tokenization, English Snowball stemming, join; default CountVectorizer",
+  "source_pickles": {
+    "phishing_classifier_lr.pkl": "1dd4a1ab94de726a8adeb4d84ec02af18e305b416f22c3c45424b6dab9b8ce2c",
+    "vectorization.pkl": "1fa567dac67b086e660784fd24b9b20f7d1c2d6057b7812570258f2e8d994c94"
+  },
+  "artifacts": {
+    "phishing_lr.onnx": "8fc59ae924df4932a20dbbd16142e87616da19b2cabb293db281a132d5595093",
+    "vocabulary.txt": "4d7be2fd19ae3628063d702777dea11169a1d86f27083ff0b8faaf64f776af32",
+    "golden.json": "efc587336fdff78fb2fbd46fa48587ef80c920de09cd1049cead13e8783d5038"
+  },
+  "validated": "Python ONNX Runtime parity on five smoke examples only; Android parity pending"
+}
