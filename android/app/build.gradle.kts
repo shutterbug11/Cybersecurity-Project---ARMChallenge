@@ -52,6 +52,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.7.1")
     kapt("androidx.room:room-compiler:2.7.1")
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
+    implementation("org.pytorch:executorch-android:1.5.1")
     implementation("org.apache.lucene:lucene-analysis-common:9.12.3")
     testImplementation("junit:junit:4.13.2")
 }
