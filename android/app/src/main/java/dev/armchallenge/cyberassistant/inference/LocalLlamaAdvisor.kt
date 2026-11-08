@@ -29,7 +29,8 @@ class LocalLlamaAdvisor @Inject constructor(@ApplicationContext private val cont
     }
 
     /** Import only the pinned public model pack through Android's document picker. */
-    suspend fun importFile(uri: Uri, tokenizer: Boolean) = withContext(Dispatchers.IO) {
+    suspend fun importFile(uri: Uri, tokenizer: Boolean) = mutex.withLock {
+        withContext(Dispatchers.IO) {
         val expectedBytes = if (tokenizer) TOKENIZER_BYTES else MODEL_BYTES
         val expectedHash = if (tokenizer) TOKENIZER_SHA256 else MODEL_SHA256
         val destination = if (tokenizer) tokenizerFile else modelFile
@@ -64,6 +65,7 @@ class LocalLlamaAdvisor @Inject constructor(@ApplicationContext private val cont
             module = null
         } finally {
             temporary.delete()
+        }
         }
     }
 
