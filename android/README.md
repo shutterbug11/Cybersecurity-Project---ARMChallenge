@@ -14,8 +14,9 @@ Open this `android/` directory in Android Studio with JDK 17 or 21 and Android S
 
 - Python ONNX Runtime matched the original sklearn classifier on 1,000 sampled URLs: zero label differences and maximum probability difference approximately 1.1×10⁻⁷.
 - The Lucene Java Snowball stemmer matched NLTK normalized URL text on 1,000 sampled URLs.
-- Android build and on-device parity are **not yet verified**. In this workspace, the Gradle client fails before compilation with `java.io.IOException: Unable to establish loopback connection` while starting its daemon.
+- GitHub Actions [run 42452032203](https://github.com/shutterbug11/Cybersecurity-Project---ARMChallenge/actions/runs/42452032203) assembled the debug APK successfully. The downloaded APK is 115,712,810 bytes (SHA-256 `3c06f02b2fc829078a3e57d5b22473c0a3003c8be0e219d1dbbf9ffda17b4f13`). This confirms compilation, not on-device inference parity. The local Gradle client still cannot start because this workspace blocks Java loopback sockets.
 - SMS's missing scaler was reconstructed from the original 7,230 rows, reproducing notebook accuracy and precision. Its three converted ONNX estimators matched the saved Python soft vote on 1,446 held-out rows. The Android tokenizer is still unvalidated, so SMS scanning remains disabled.
 - The previously missing DDoS and Windows PE RandomForest models were retrained with separate user approval. Their ONNX predictions matched Python on all 19,871 and 27,610 held-out rows respectively. Packet-flow and PE extraction parity remain untested, so neither detector is enabled.
+- The existing grayscale CNN checkpoint exported to a 554,632-byte ExecuTorch XNNPACK `.pte`. Runtime validation on Windows is pending after a PyTorch/ExecuTorch environment error; Android image preprocessing and on-device parity are untested. It remains disabled.
 
 No production release APK is claimed.
